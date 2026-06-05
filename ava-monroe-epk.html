@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ava Monroe — Presence Beyond The Frame</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a050;
+    --gold-light: #e8c97a;
+    --ivory: #f5f0e8;
+    --dark: #080808;
+    --dark-2: #0f0f0f;
+    --dark-3: #161616;
+    --dark-4: #1e1e1e;
+    --charcoal: #1a1a1a;
+    --white: #ffffff;
+    --text-muted: #777777;
+    --text-light: #aaaaaa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+    transition: all 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.98);
+    padding: 16px 60px;
+    border-bottom: 1px solid rgba(201,160,80,0.1);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-style: italic;
+  }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    filter: brightness(0.4) saturate(0.8);
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.5) 50%, rgba(8,8,8,0.1) 100%),
+      linear-gradient(to top, rgba(8,8,8,0.7) 0%, transparent 60%);
+    z-index: 1;
+  }
+  .hero-left {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 120px 60px 80px;
+  }
+  .hero-right {
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+  }
+  .hero-portrait {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: grayscale(10%) brightness(0.85);
+  }
+  .hero-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(8,8,8,0.8) 0%, transparent 40%);
+    z-index: 1;
+  }
+  .hero-right::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(8,8,8,0.6) 0%, transparent 50%);
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-size: 9px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+  .hero-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--gold); }
+
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 7vw, 100px);
+    font-weight: 300;
+    line-height: 0.9;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--gold-light);
+    display: block;
+  }
+
+  .hero-roles {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.7s forwards;
+  }
+  .hero-role { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); }
+  .hero-div { color: rgba(201,160,80,0.3); }
+
+  .hero-divider {
+    width: 50px; height: 1px;
+    background: var(--gold);
+    margin: 28px 0;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
+  }
+
+  .hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.5vw, 28px);
+    font-style: italic;
+    color: var(--ivory);
+    line-height: 1.5;
+    max-width: 420px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.1s forwards;
+  }
+
+  .hero-credits {
+    display: flex;
+    gap: 12px;
+    margin-top: 36px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.3s forwards;
+  }
+  .hero-credit {
+    border: 1px solid rgba(201,160,80,0.2);
+    padding: 8px 16px;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    background: rgba(201,160,80,0.04);
+  }
+
+  .hero-cta {
+    margin-top: 36px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.5s forwards;
+    display: flex;
+    gap: 16px;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--dark);
+    padding: 16px 36px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-secondary {
+    border: 1px solid rgba(201,160,80,0.3);
+    color: var(--gold);
+    padding: 16px 36px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .btn-secondary:hover { background: rgba(201,160,80,0.08); }
+
+  /* GOLD RULE */
+  .gold-rule { height: 1px; background: linear-gradient(to right, transparent, var(--gold) 30%, var(--gold) 70%, transparent); }
+
+  /* STATS */
+  .stats {
+    background: var(--dark-2);
+    padding: 50px 80px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid rgba(201,160,80,0.06);
+  }
+  .stat-block {
+    text-align: center;
+    padding: 16px;
+    border-right: 1px solid rgba(201,160,80,0.08);
+  }
+  .stat-block:last-child { border-right: none; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; color: var(--gold); line-height: 1; }
+  .stat-label { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-top: 10px; }
+
+  /* SECTION SHARED */
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label.center { justify-content: center; }
+  .section-label::before, .section-label.center::before, .section-label.center::after { content: ''; flex: 1; height: 1px; background: rgba(201,160,80,0.1); }
+  .section-label:not(.center)::before { width: 30px; flex: none; }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 4vw, 52px);
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+  .section-title em { font-style: italic; color: var(--gold-light); }
+
+  /* ABOUT */
+  .about {
+    padding: 120px 80px;
+    background: var(--dark-3);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  .about-body { font-size: 13px; line-height: 2; color: var(--text-light); margin-bottom: 16px; }
+  .about-quote {
+    margin-top: 36px;
+    padding: 24px 28px;
+    border-left: 2px solid var(--gold);
+    background: rgba(201,160,80,0.03);
+  }
+  .about-quote-text { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: var(--gold-light); line-height: 1.6; }
+  .about-image-wrap { position: relative; }
+  .about-img { width: 100%; height: 640px; object-fit: cover; object-position: top center; filter: grayscale(5%); }
+  .about-frame { position: absolute; top: -16px; right: -16px; bottom: 16px; left: 16px; border: 1px solid rgba(201,160,80,0.12); z-index: -1; }
+
+  /* CASTING SNAPSHOT */
+  .snapshot { padding: 70px 80px; background: var(--dark-2); }
+  .snapshot-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-top: 40px; }
+  .snapshot-item { background: var(--dark-4); padding: 28px 20px; text-align: center; transition: background 0.3s; }
+  .snapshot-item:hover { background: rgba(201,160,80,0.05); }
+  .snapshot-key { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .snapshot-val { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300; color: var(--white); }
+
+  /* CREDITS */
+  .credits { padding: 120px 80px; background: var(--dark); }
+  .credits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 60px; }
+  .credit-card {
+    background: var(--dark-3);
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s, transform 0.3s;
+  }
+  .credit-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.5s ease;
+  }
+  .credit-card:hover { background: var(--dark-4); transform: translateY(-4px); }
+  .credit-card:hover::before { transform: scaleX(1); }
+  .credit-network { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .credit-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; margin-bottom: 8px; }
+  .credit-role { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 16px; font-style: italic; }
+  .credit-desc { font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+
+  /* FULL CREDITS */
+  .full-credits { padding: 80px; background: var(--dark-2); }
+  .credits-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 50px; }
+  .credit-item {
+    background: var(--dark-3);
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+    border-left: 2px solid transparent;
+  }
+  .credit-item:hover { background: var(--dark-4); border-left-color: var(--gold); }
+  .credit-item-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--white); margin-bottom: 3px; }
+  .credit-item-role { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; }
+  .credit-item-year { font-size: 10px; color: var(--gold); letter-spacing: 2px; flex-shrink: 0; margin-left: 16px; }
+
+  /* HEADSHOTS */
+  .headshots { padding: 120px 80px; background: var(--dark-3); }
+  .headshots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 60px; }
+  .headshot-item { overflow: hidden; height: 420px; position: relative; }
+  .headshot-item img { width: 100%; height: 100%; object-fit: cover; object-position: top; filter: grayscale(10%); transition: transform 0.7s ease, filter 0.4s; }
+  .headshot-item:hover img { transform: scale(1.06); filter: grayscale(0%); }
+
+  /* PRESS */
+  .press { padding: 100px 80px; background: var(--dark); text-align: center; }
+  .press-quotes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 50px;
+    margin-bottom: 60px;
+  }
+  .press-quote { background: var(--dark-3); padding: 36px 28px; }
+  .press-quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 60px; color: rgba(201,160,80,0.12); line-height: 0.8; margin-bottom: 12px; }
+  .press-quote-text { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-style: italic; color: var(--text-light); line-height: 1.8; margin-bottom: 16px; }
+  .press-quote-source { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); }
+  .press-logos { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+  .press-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: rgba(255,255,255,0.15); letter-spacing: 3px; text-transform: uppercase; transition: color 0.3s; cursor: default; }
+  .press-logo:hover { color: rgba(255,255,255,0.4); }
+
+  /* IMDB */
+  .imdb-section { padding: 80px; background: var(--dark-3); text-align: center; }
+  .imdb-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; margin-bottom: 32px; }
+  .imdb-title em { font-style: italic; color: var(--gold-light); }
+  .imdb-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #f5c518;
+    color: #000;
+    padding: 18px 48px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .imdb-btn:hover { background: #e6b800; transform: translateY(-2px); }
+
+  /* CONTACT */
+  .contact { padding: 120px 80px; background: var(--dark-2); display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; }
+  .contact-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 4vw, 50px); font-weight: 300; line-height: 1.2; margin-bottom: 20px; }
+  .contact-title em { font-style: italic; color: var(--gold-light); }
+  .contact-body { font-size: 13px; line-height: 1.9; color: var(--text-muted); margin-bottom: 32px; }
+
+  /* REPRESENTATION CARD */
+  .rep-card { background: var(--dark-3); border: 1px solid rgba(201,160,80,0.15); padding: 32px; margin-bottom: 32px; }
+  .rep-label { font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  .rep-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 6px; }
+  .rep-type { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 16px; }
+  .rep-contact { display: flex; flex-direction: column; gap: 10px; }
+  .rep-contact-item { font-size: 12px; color: var(--text-light); display: flex; align-items: center; gap: 10px; }
+  .rep-contact-item a { color: var(--text-light); text-decoration: none; transition: color 0.3s; }
+  .rep-contact-item a:hover { color: var(--gold); }
+
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-field { display: flex; flex-direction: column; gap: 8px; }
+  .form-field label { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); }
+  .form-field input, .form-field select, .form-field textarea {
+    background: var(--dark-3);
+    border: 1px solid rgba(201,160,80,0.12);
+    color: var(--white);
+    padding: 14px 18px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 300;
+    outline: none;
+    transition: border-color 0.3s;
+    resize: none;
+    -webkit-appearance: none;
+  }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--gold); }
+  .form-field select option { background: var(--dark-3); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .submit-btn {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 18px 48px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    align-self: flex-start;
+    margin-top: 8px;
+  }
+  .submit-btn:hover { background: var(--gold-light); }
+
+  /* DOWNLOAD */
+  .downloads { padding: 60px 80px; background: var(--dark-3); text-align: center; }
+  .download-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--gold);
+    color: var(--dark);
+    padding: 16px 36px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .download-btn:hover { background: var(--gold-light); }
+  .download-btn.outline {
+    background: transparent;
+    border: 1px solid rgba(201,160,80,0.3);
+    color: var(--gold);
+  }
+  .download-btn.outline:hover { background: rgba(201,160,80,0.08); }
+
+  /* PRESENTED BY */
+  .presented-by {
+    background: var(--dark-2);
+    border-top: 1px solid rgba(201,160,80,0.08);
+    padding: 50px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+  }
+  .pb-label { font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+  .pb-brand { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--gold); }
+  .pb-brand em { font-style: italic; }
+  .pb-tagline { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; margin-top: 6px; }
+  .pb-cta p { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; max-width: 280px; text-align: right; }
+  .pb-link { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,160,80,0.3); padding-bottom: 2px; transition: border-color 0.3s; }
+  .pb-link:hover { border-color: var(--gold); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    border-top: 1px solid rgba(201,160,80,0.06);
+    padding: 32px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--gold); letter-spacing: 2px; }
+  .footer-copy { font-size: 9px; color: var(--text-muted); letter-spacing: 1px; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    nav.scrolled { padding: 12px 20px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 100px 24px 60px; }
+    .hero-right { height: 400px; }
+    .stats { grid-template-columns: 1fr 1fr; padding: 40px 20px; }
+    .stat-block { border-right: none; border-bottom: 1px solid rgba(201,160,80,0.08); }
+    .about { grid-template-columns: 1fr; padding: 60px 20px; gap: 60px; }
+    .about-img { height: 400px; }
+    .snapshot { padding: 60px 20px; }
+    .snapshot-grid { grid-template-columns: 1fr 1fr; }
+    .credits { padding: 60px 20px; }
+    .credits-grid { grid-template-columns: 1fr; }
+    .full-credits { padding: 60px 20px; }
+    .credits-list { grid-template-columns: 1fr; }
+    .headshots { padding: 60px 20px; }
+    .headshots-grid { grid-template-columns: 1fr; }
+    .press { padding: 60px 20px; }
+    .press-quotes { grid-template-columns: 1fr; }
+    .press-logos { gap: 24px; }
+    .imdb-section { padding: 60px 20px; }
+    .contact { grid-template-columns: 1fr; padding: 60px 20px; gap: 60px; }
+    .form-row { grid-template-columns: 1fr; }
+    .downloads { padding: 40px 20px; }
+    .presented-by { flex-direction: column; padding: 40px 20px; text-align: center; }
+    .pb-cta p { text-align: center; }
+    footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; }
+    .hero-cta { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-logo">Ava Monroe</div>
+  <ul class="nav-links">
+    <li><a href="#about">Story</a></li>
+    <li><a href="#credits">Credits</a></li>
+    <li><a href="#press">Press</a></li>
+    <li><a href="#contact">Connect</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <video class="hero-video" autoplay muted loop playsinline id="heroVideo">
+    <source src="ava-hero.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-left">
+    <div class="hero-eyebrow">Actress · Los Angeles, CA</div>
+    <h1 class="hero-name">Ava<br><em>Monroe</em></h1>
+    <div class="hero-roles">
+      <span class="hero-role">Actress</span>
+      <span class="hero-div">·</span>
+      <span class="hero-role">Storyteller</span>
+      <span class="hero-div">·</span>
+      <span class="hero-role">Creative Force</span>
+    </div>
+    <div class="hero-divider"></div>
+    <p class="hero-tagline">"Presence Beyond The Frame"</p>
+    <div class="hero-credits">
+      <div class="hero-credit">HBO · Drama Series</div>
+      <div class="hero-credit">Netflix · Limited Series</div>
+      <div class="hero-credit">Sundance Selection</div>
+      <div class="hero-credit">NAACP Nominated</div>
+    </div>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">Request Reel</a>
+      <a href="#credits" class="btn-secondary">View Credits</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img class="hero-portrait" src="ava-portrait.jpg" alt="Ava Monroe">
+  </div>
+</section>
+
+<div class="gold-rule"></div>
+
+<div class="stats reveal">
+  <div class="stat-block"><div class="stat-num">12+</div><div class="stat-label">Screen Credits</div></div>
+  <div class="stat-block"><div class="stat-num">4</div><div class="stat-label">Major Networks</div></div>
+  <div class="stat-block"><div class="stat-num">2</div><div class="stat-label">Award Nominations</div></div>
+  <div class="stat-block"><div class="stat-num">8+</div><div class="stat-label">Years in the Craft</div></div>
+</div>
+
+<section class="about reveal" id="about">
+  <div class="about-text">
+    <div class="section-label">The Storyteller</div>
+    <h2 class="section-title">Character-Driven.<br><em>Unforgettable.</em></h2>
+    <p class="about-body">Ava Monroe doesn't play characters. She inhabits them. With a background rooted in classical technique and a natural instinct for emotional truth, Ava brings a rare combination of intellectual depth and raw vulnerability to every role she takes on.</p>
+    <p class="about-body">From HBO prestige drama to independent film festival selections, her work consistently draws audiences into worlds they don't want to leave. Critics describe her presence as magnetic — the kind of actress who makes every scene feel essential.</p>
+    <p class="about-body">She approaches storytelling as a responsibility. Every character carries a truth worth honoring. Every performance is a conversation between the story and the audience. That's not craft. That's calling.</p>
+    <div class="about-quote">
+      <div class="about-quote-text">"I'm not interested in being seen. I'm interested in being felt."</div>
+    </div>
+  </div>
+  <div class="about-image-wrap">
+    <img class="about-img" src="ava-portrait.jpg" alt="Ava Monroe">
+    <div class="about-frame"></div>
+  </div>
+</section>
+
+<div class="gold-rule"></div>
+
+<section class="snapshot reveal">
+  <div class="section-label center">Casting Snapshot</div>
+  <div class="snapshot-grid">
+    <div class="snapshot-item"><div class="snapshot-key">Playing Age</div><div class="snapshot-val">28–42</div></div>
+    <div class="snapshot-item"><div class="snapshot-key">Languages</div><div class="snapshot-val">English · French</div></div>
+    <div class="snapshot-item"><div class="snapshot-key">Location</div><div class="snapshot-val">Los Angeles, CA</div></div>
+    <div class="snapshot-item"><div class="snapshot-key">Local Hire</div><div class="snapshot-val">LA · NY · ATL</div></div>
+    <div class="snapshot-item"><div class="snapshot-key">Union</div><div class="snapshot-val">SAG-AFTRA</div></div>
+  </div>
+</section>
+
+<section class="credits reveal" id="credits">
+  <div class="section-label center">Featured Credits</div>
+  <h2 class="section-title" style="text-align: center;">The Work Speaks <em>for Itself</em></h2>
+  <div class="credits-grid">
+    <div class="credit-card">
+      <div class="credit-network">HBO · Drama Series</div>
+      <div class="credit-title">The Quiet Season</div>
+      <div class="credit-role">Series Regular · Elena Voss</div>
+      <div class="credit-desc">A critically acclaimed psychological drama exploring grief, identity and reinvention. Ava's portrayal of Elena earned her first major award nomination.</div>
+    </div>
+    <div class="credit-card">
+      <div class="credit-network">Netflix · Limited Series</div>
+      <div class="credit-title">After the Verdict</div>
+      <div class="credit-role">Supporting Lead · DA Claire Whitmore</div>
+      <div class="credit-desc">A riveting courtroom limited series. Ava's performance as the morally complex District Attorney became one of the most discussed of the season.</div>
+    </div>
+    <div class="credit-card">
+      <div class="credit-network">Sundance Selection · Feature</div>
+      <div class="credit-title">Still Water</div>
+      <div class="credit-role">Lead · Nadia</div>
+      <div class="credit-desc">A Sundance Film Festival selection. This intimate independent drama showcased Ava's full dramatic range and earned her second major nomination.</div>
+    </div>
+  </div>
+</section>
+
+<section class="full-credits reveal">
+  <div class="section-label center">Full Filmography</div>
+  <h2 class="section-title" style="text-align: center;">12 Credits. <em>One Voice.</em></h2>
+  <div class="credits-list">
+    <div class="credit-item"><div><div class="credit-item-title">The Quiet Season</div><div class="credit-item-role">Elena Voss · HBO Series Regular</div></div><div class="credit-item-year">2024</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">After the Verdict</div><div class="credit-item-role">DA Claire Whitmore · Netflix</div></div><div class="credit-item-year">2023</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">Still Water</div><div class="credit-item-role">Nadia · Sundance Feature</div></div><div class="credit-item-year">2023</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">Meridian</div><div class="credit-item-role">Dr. Simone Cross · FX Series</div></div><div class="credit-item-year">2022</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">The Last Letter</div><div class="credit-item-role">Lead · Cora · Independent</div></div><div class="credit-item-year">2022</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">Broken Ground</div><div class="credit-item-role">Supporting · Amazon Original</div></div><div class="credit-item-year">2021</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">City of Saints</div><div class="credit-item-role">Recurring · CBS Drama</div></div><div class="credit-item-year">2021</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">Homecoming</div><div class="credit-item-role">Guest Lead · NBC</div></div><div class="credit-item-year">2020</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">The Arrangement</div><div class="credit-item-role">Co-Lead · Independent Film</div></div><div class="credit-item-year">2020</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">Nightfall</div><div class="credit-item-role">Guest · Starz Series</div></div><div class="credit-item-year">2019</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">Harbor Light</div><div class="credit-item-role">Supporting · Feature Film</div></div><div class="credit-item-year">2018</div></div>
+    <div class="credit-item"><div><div class="credit-item-title">First Take</div><div class="credit-item-role">Lead · Short Film</div></div><div class="credit-item-year">2017</div></div>
+  </div>
+</section>
+
+<section class="headshots reveal">
+  <div class="section-label center">Headshots</div>
+  <h2 class="section-title" style="text-align: center;">Through the <em>Lens</em></h2>
+  <div class="headshots-grid">
+    <div class="headshot-item"><img src="ava-portrait.jpg" alt="Ava Monroe"></div>
+    <div class="headshot-item"><img src="ava-portrait.jpg" alt="Ava Monroe" style="filter: grayscale(100%);"></div>
+    <div class="headshot-item"><img src="ava-portrait.jpg" alt="Ava Monroe" style="filter: grayscale(50%) sepia(20%);"></div>
+  </div>
+</section>
+
+<section class="press reveal" id="press">
+  <div class="section-label center">Critical Reception</div>
+  <h2 class="section-title" style="text-align: center;">What the <em>Critics Say</em></h2>
+  <div class="press-quotes">
+    <div class="press-quote">
+      <div class="press-quote-mark">"</div>
+      <div class="press-quote-text">Monroe carries every scene with a quiet intensity that is impossible to look away from. A genuine talent.</div>
+      <div class="press-quote-source">The Hollywood Reporter</div>
+    </div>
+    <div class="press-quote">
+      <div class="press-quote-mark">"</div>
+      <div class="press-quote-text">The kind of actress who makes you forget you're watching a performance. Completely, utterly present.</div>
+      <div class="press-quote-source">Variety</div>
+    </div>
+    <div class="press-quote">
+      <div class="press-quote-mark">"</div>
+      <div class="press-quote-text">Ava Monroe is the reason prestige television still matters. Her work in The Quiet Season is career-defining.</div>
+      <div class="press-quote-source">IndieWire</div>
+    </div>
+  </div>
+  <div class="press-logos">
+    <div class="press-logo">The Hollywood Reporter</div>
+    <div class="press-logo">Variety</div>
+    <div class="press-logo">IndieWire</div>
+    <div class="press-logo">Deadline</div>
+    <div class="press-logo">The A.V. Club</div>
+  </div>
+</section>
+
+<section class="imdb-section reveal">
+  <div class="section-label center">Full Filmography</div>
+  <h2 class="imdb-title">View Complete Credits on <em>IMDb</em></h2>
+  <a href="#" class="imdb-btn">IMDb &nbsp; View Full Credits →</a>
+</section>
+
+<section class="downloads reveal">
+  <div class="section-label center">Industry Resources</div>
+  <h2 class="section-title" style="text-align: center;">Download <em>Press Materials</em></h2>
+  <div class="download-btns">
+    <a href="#" class="download-btn">📄 &nbsp; Download Resume</a>
+    <a href="#" class="download-btn outline">📦 &nbsp; Download Press Kit</a>
+  </div>
+</section>
+
+<section class="contact reveal" id="contact">
+  <div class="contact-left">
+    <div class="section-label">Representation</div>
+    <h2 class="contact-title">Work with <em>Ava Monroe</em></h2>
+    <p class="contact-body">For casting inquiries, project submissions and collaboration requests — contact Ava's representation directly or submit through the form.</p>
+    <div class="rep-card">
+      <div class="rep-label">Talent Representation</div>
+      <div class="rep-name">Pinnacle Talent Agency</div>
+      <div class="rep-type">Film · Television · Theatre</div>
+      <div class="rep-contact">
+        <div class="rep-contact-item">✉ <a href="mailto:talent@pinnacletalent.com">talent@pinnacletalent.com</a></div>
+        <div class="rep-contact-item">👤 <span>Sarah James — Lead Agent</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="contact-form">
+    <div class="section-label">Direct Inquiry</div>
+    <form action="#" method="POST">
+      <div class="form-row" style="margin-bottom: 16px;">
+        <div class="form-field"><label>First Name</label><input type="text" name="first_name" placeholder="First Name"></div>
+        <div class="form-field"><label>Last Name</label><input type="text" name="last_name" placeholder="Last Name"></div>
+      </div>
+      <div class="form-field" style="margin-bottom: 16px;"><label>Email</label><input type="email" name="email" placeholder="your@email.com"></div>
+      <div class="form-field" style="margin-bottom: 16px;"><label>Production Company</label><input type="text" name="company" placeholder="Company or Studio"></div>
+      <div class="form-field" style="margin-bottom: 16px;">
+        <label>Inquiry Type</label>
+        <select name="type">
+          <option>Casting Submission</option>
+          <option>Collaboration</option>
+          <option>Press Request</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-field" style="margin-bottom: 16px;"><label>Message</label><textarea name="message" rows="4" placeholder="Tell Ava about your project..."></textarea></div>
+      <button type="submit" class="submit-btn">Send Inquiry →</button>
+    </form>
+  </div>
+</section>
+
+<div class="presented-by reveal">
+  <div>
+    <div class="pb-label">This Cinematic EPK Created By</div>
+    <div class="pb-brand">Rain Management <em>Solutions</em></div>
+    <div class="pb-tagline">Cinematic Brand Experiences. Lasting Impressions.</div>
+  </div>
+  <div class="pb-cta">
+    <p>Want a cinematic EPK or brand experience like this?</p>
+    <a href="https://bit.ly/RainManagement" class="pb-link">Get Yours Today →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-name">Ava Monroe · Actress · Storyteller · Creative Force</div>
+  <div class="footer-copy">© 2026 · Los Angeles, CA · SAG-AFTRA</div>
+</footer>
+
+<script>
+  const heroVideo = document.getElementById('heroVideo');
+  if (heroVideo) {
+    heroVideo.muted = true;
+    heroVideo.play().catch(() => {
+      document.addEventListener('click', () => heroVideo.play(), { once: true });
+    });
+  }
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
